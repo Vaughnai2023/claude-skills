@@ -12,6 +12,8 @@ Thumbs.db
 !.env.example
 *.pem
 *.key
+*.p12
+id_rsa*
 
 # === Claude Code (personal settings stay local) ===
 .claude/settings.local.json
