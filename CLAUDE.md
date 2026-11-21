@@ -1,6 +1,18 @@
 # claude-skills
 
-Vaughn's Claude Code plugin marketplace. People at Time for Sense install from it, so skills must work for people who don't know git or code.
+Vaughn's Claude Code plugin marketplace. Other people install from it, so skills must work for people who don't know git or code.
+
+## This repo is public
+
+Anyone on the internet can read everything here, including old versions. Every skill added must be safe to share. Before adding or changing anything, check it contains none of these:
+
+- Client, company or people's names (other than Vaughn as the author)
+- Email addresses, phone numbers, physical addresses
+- Passwords, API keys, tokens, or links that only work with a login
+- Internal business details: prices, rates, contracts, project names, client data or examples taken from real client work
+- Anything Vaughn would mind a stranger reading
+
+If a skill needs any of that to work, it doesn't belong here. It goes in its own private repo. When in doubt, ask Vaughn before committing.
 
 ## Rules for this repo
 
