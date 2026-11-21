@@ -1,0 +1,14 @@
+{
+  "name": "vaughn-skills",
+  "description": "Vaughn Botha's Claude Code skills",
+  "owner": {
+    "name": "Vaughn Botha"
+  },
+  "plugins": [
+    {
+      "name": "github-ready",
+      "source": "./plugins/github-ready",
+      "description": "Set up a new project on GitHub, or check an existing one: branches, merges, secret checks and safety rules for Claude"
+    }
+  ]
+}
