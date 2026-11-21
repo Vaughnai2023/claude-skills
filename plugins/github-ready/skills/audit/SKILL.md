@@ -85,6 +85,8 @@ git push -u origin chore/github-ready
 gh pr create --fill
 ```
 
+If `gh pr create` fails (it does in cloud sessions from the phone or web), use the REST API instead: `gh api repos/OWNER/NAME/pulls -f title='...' -f head='BRANCH' -f base=main -f body='...'`.
+
 GitHub settings changes (squash merges, Dependabot, branch protection) apply to the repo directly. Say which ones you're about to change and wait for a yes before running them.
 
 ## Step 6: Prove it works
