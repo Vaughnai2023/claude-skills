@@ -9,15 +9,16 @@ disable-model-invocation: true
 Set up a new project so it is safe from day one: git, a private GitHub repo, a branch-and-pull-request flow, secret checks, and rules that stop Claude doing anything risky. End with a test that proves the protections work.
 
 Shared material lives in the plugin folder, two levels up from this file:
+- `../../reference/how-to-talk-and-act.md`: how to write for a non-technical person, which steps to just do and which to ask about
 - `../../reference/checklist.md`: every check, what it means in plain words, and how to test it
 - `../../reference/gitignore-patterns.md`: `.gitignore` building blocks
 - `../../templates/`: files you copy into the project
 
-Read `checklist.md` before you start.
+Read both reference files before you start.
 
-## How to talk to the person
+## How to talk and when to act
 
-The person may know nothing about git. Use plain words, no jargon. When a git word is unavoidable (branch, commit, pull request), explain it in one short sentence the first time. Ask one thing at a time. Before anything that changes GitHub, say what will happen and wait for a yes.
+Read `../../reference/how-to-talk-and-act.md` first and follow it for every message. In short: write for someone who has never used git, do the safe steps without asking (then say what you did and why it's safe), and only ask about the risky ones, with your recommendation first.
 
 ## Step 1: Check the machine
 
@@ -29,7 +30,7 @@ Run `git --version` and `gh auth status`.
 
 ## Step 2: Ask the setup questions
 
-Use one AskUserQuestion call:
+Use one AskUserQuestion call. Put a recommended answer first on each, so the person can just accept:
 
 1. **Project name**: lowercase with dashes, such as `booking-portal`. Suggest one from the folder name.
 2. **Owner**: their own account, or one of their organisations (list them with `gh api user/orgs --jq '.[].login'`). If they want it under a different personal account they can't log in as here, explain that this account has to create the repo and add them as a collaborator, then stop and help with that instead.
@@ -45,7 +46,7 @@ Use one AskUserQuestion call:
 
 ## Step 4: Write the files
 
-Never overwrite an existing file without asking. If a file exists, show what you'd add and merge with their yes.
+Creating new files and adding to existing ones is safe: do it without asking. Only ask before replacing something that's already there.
 
 1. `.gitignore` from `gitignore-patterns.md`: OS and editor sections always, the stack's section, every secret file found.
 2. `.env.example` if there is a `.env`: variable names only, placeholder values. Never copy real values.
@@ -67,7 +68,7 @@ git add -A
 git status
 ```
 
-Show `git status` and point out anything unexpected. Then make the first commit. The pre-commit hook blocks commits on `main`; the very first commit is the one allowed exception:
+Check `git status` yourself. If something looks wrong (a secret file, a huge file), stop and explain it in plain words. Otherwise make the first commit without asking. The pre-commit hook blocks commits on `main`; the very first commit is the one allowed exception:
 
 ```bash
 ALLOW_MAIN_COMMIT=1 git commit -m "Initial commit"
@@ -87,7 +88,7 @@ Use `--public` if they chose Public. This first push to `main` is the only one e
 
 ## Step 7: GitHub settings
 
-Run each and note pass or fail for the report:
+These only tighten things and can be switched back, so run them without asking. Note pass or fail for the report:
 
 ```bash
 # Only squash merges, and tidy up branches after merging
@@ -113,21 +114,17 @@ Run every test in the "Verify" section of `checklist.md`. These test the protect
 
 ## Step 10: Report
 
-Show a short report. One line per item, plain words. Mark each item:
+Use the report format in `how-to-talk-and-act.md`: one-sentence verdict, what you did for them, what they need to do (at most three steps), good to know. Base every "done" on a passing test from Step 9.
 
-- ✅ working, with proof (the test that passed)
-- ⚠️ not possible on this plan, with what covers it instead
-- ❌ failed, with what to do
-
-End with two next steps:
-- For phone and cloud work, install the Claude GitHub App on this repo: github.com/apps/claude, then Configure, and add the repo (skip if it's already on "All repositories").
-- The safety hooks switch on by themselves in Claude Code sessions. Anyone working on this repo without Claude should run `git config core.hooksPath .githooks` once after cloning.
+Usual "what you need to do" items, in plain words:
+- If they'll work on this from their phone or the web: "Let Claude into this project on GitHub: open github.com/apps/claude, click **Configure**, and add this project (skip this if it says All repositories)."
+- How to work from now on, in one line: "Ask Claude for a change, check it, then say 'commit, push and open a pull request', and approve it on GitHub."
 
 ## Never
 
 - Commit or push a secret
 - Push to `main` after the first push, or force-push, ever
 - Use `--no-verify`
-- Overwrite a file without asking
-- Create anything on GitHub without a yes
+- Replace an existing file without asking
+- Create a project on GitHub without a yes
 - Claim something is protected without a test that proves it
