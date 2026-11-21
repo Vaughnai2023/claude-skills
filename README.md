@@ -11,24 +11,19 @@ Skills for Claude Code that you install once and keep up to date from this repo.
 
 ## Install (one time)
 
-### Easiest: through the Claude Team plan
+Open the Claude desktop app, click the **Code** tab, start a new session (pick any folder), and paste this message:
 
-If your organisation is on a Claude Team or Enterprise plan, an admin can add this repo under **Organization settings → Plugins & skills** on claude.ai. Then everyone gets the skills with nothing to install. For this to work, the GitHub account connected to the organisation needs read access to this repo, so ask Vaughn to add it.
+```
+Please install Vaughn's Claude skills on this computer for me. I'm not technical, so do everything you can yourself, explain each step in plain words, and only ask me when you need me to click something.
 
-### On your own computer
+1. Make sure git is installed. If it isn't, install it.
+2. Make sure the claude command works in the terminal. If it doesn't, install the Claude Code command-line tool using the official instructions at code.claude.com.
+3. Run: claude plugin marketplace add Vaughnai2023/claude-skills
+4. Run: claude plugin install github-ready@vaughn-skills
+5. Tell me it's done, and that from now on, when Vaughn says he's updated something, I just say "Update Vaughn's skills" in a Code session.
+```
 
-**1. Get access.** Ask Vaughn to add your GitHub account to this repo. You'll get an email invite: click **Accept**.
-
-**2. Let Claude do the setup.** Open the Claude desktop app, go to the **Code** tab, open any folder, and paste this message:
-
-> Please set up Vaughn's Claude skills on this computer. Explain each step to me in plain words, and ask before installing anything.
-> 1. Check that git and the GitHub command-line tool `gh` are installed. If not, install them.
-> 2. Help me sign in to GitHub with `gh auth login` (GitHub.com, HTTPS, log in with a browser), then run `gh auth setup-git`.
-> 3. Check that the `claude` command works in the terminal. If it doesn't, install the Claude Code command-line tool using the official instructions at code.claude.com.
-> 4. Run `claude plugin marketplace add Vaughnai2023/claude-skills`, then `claude plugin install github-ready@vaughn-skills`.
-> 5. Tell me when it's done and how to use it.
-
-**3. Start a new session** (close and reopen the session, or start a new one). Type `/github-ready:` and the skills appear.
+Claude does the rest. No GitHub account needed. When it's done, start a new session and type `/github-ready:` to see the skills.
 
 ---
 
@@ -81,4 +76,6 @@ plugins/<name>/                   one folder per plugin
 
 **Move an existing skill** from `~/.claude/skills/<name>`: create `plugins/<name>/.claude-plugin/plugin.json`, copy the skill folder into `plugins/<name>/skills/<name>/`, and add the catalogue entry. Once installed this way, it's typed as `/<name>:<name>`, so consider shorter skill names inside the plugin.
 
-**Give someone access:** repo **Settings → Collaborators → Add people**, with **Read** access.
+**Share it with someone:** send them the install section above. The repo is public, so they don't need a GitHub account or an invite.
+
+**Keep it public-safe:** this repo is public. Nothing personal, nothing about clients, no keys. Private skills go in their own private repo. See `CLAUDE.md` for the full list.
