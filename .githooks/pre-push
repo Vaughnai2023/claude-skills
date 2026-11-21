@@ -1,0 +1,25 @@
+#!/bin/sh
+# github-ready: runs before every push.
+# Blocks pushes to main and force-pushes. On a free GitHub plan with a private
+# repo, this stands in for GitHub's branch protection.
+
+zero=0000000000000000000000000000000000000000
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main|refs/heads/master)
+      if [ "$ALLOW_MAIN_PUSH" != "1" ]; then
+        printf '\n✋ Pushing straight to %s is blocked.\n   Push your branch and open a pull request instead.\n\n' "${remote_ref#refs/heads/}" >&2
+        exit 1
+      fi
+      ;;
+  esac
+  if [ "$local_sha" != "$zero" ] && [ "$remote_sha" != "$zero" ]; then
+    if ! git merge-base --is-ancestor "$remote_sha" "$local_sha" 2>/dev/null; then
+      printf '\n✋ Force-push blocked: it would overwrite work on %s.\n   Pull first: git pull --rebase\n\n' "${remote_ref#refs/heads/}" >&2
+      exit 1
+    fi
+  fi
+done
+
+exit 0

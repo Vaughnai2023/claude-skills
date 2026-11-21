@@ -1,0 +1,39 @@
+#!/bin/sh
+# github-ready: runs before every commit.
+# 1. No commits straight onto main. 2. No secrets.
+
+branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
+  if [ "$ALLOW_MAIN_COMMIT" != "1" ]; then
+    printf '\n✋ You are on %s. Work on a branch instead:\n   git switch -c feat/short-name\n\n' "$branch" >&2
+    exit 1
+  fi
+fi
+
+# Files that must never be committed
+bad=$(git diff --cached --name-only --diff-filter=ACM |
+  grep -E '(^|/)(\.env(\..+)?|id_rsa[^/]*|id_ed25519[^/]*|[^/]*\.pem|[^/]*\.p12|[^/]*\.key|serviceAccountKey\.json)$' |
+  grep -vE '\.env\.(example|sample|template)$')
+if [ -n "$bad" ]; then
+  printf '\n✋ These files hold secrets and can'"'"'t be committed:\n%s\n\nUnstage them with: git rm --cached <file>\nand add them to .gitignore.\n\n' "$bad" >&2
+  exit 1
+fi
+
+# Secrets inside files
+if command -v gitleaks >/dev/null 2>&1; then
+  if gitleaks git --help >/dev/null 2>&1; then
+    gitleaks git --staged --redact --no-banner || { printf '\n✋ gitleaks found a secret (above). Move it to .env and try again.\n\n' >&2; exit 1; }
+  else
+    gitleaks protect --staged --redact --no-banner || { printf '\n✋ gitleaks found a secret (above). Move it to .env and try again.\n\n' >&2; exit 1; }
+  fi
+else
+  hits=$(git diff --cached -U0 --diff-filter=ACM | grep -E '^\+' |
+    grep -nE 'AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY-----|sk-ant-[A-Za-z0-9_-]{20,}|sk-(proj-)?[A-Za-z0-9_-]{32,}|gh[pousr]_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{40,}|xox[baprs]-[A-Za-z0-9-]{10,}|AIza[0-9A-Za-z_-]{35}|sk_live_[0-9a-zA-Z]{24,}' |
+    cut -c1-60)
+  if [ -n "$hits" ]; then
+    printf '\n✋ This looks like a password or API key:\n%s...\n\nMove it to .env (which git ignores) and read it from there.\nIf it was ever pushed before, change the key too.\n\n' "$hits" >&2
+    exit 1
+  fi
+fi
+
+exit 0

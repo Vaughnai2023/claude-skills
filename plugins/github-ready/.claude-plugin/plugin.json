@@ -1,0 +1,7 @@
+{
+  "name": "github-ready",
+  "description": "Set up a new project on GitHub, or check an existing one: branches, merges, secret checks and safety rules for Claude",
+  "author": {
+    "name": "Vaughn Botha"
+  }
+}

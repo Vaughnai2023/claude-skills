@@ -1,0 +1,22 @@
+# === OS files ===
+.DS_Store
+Thumbs.db
+
+# === Editors ===
+.vscode/*
+.idea/
+
+# === Secrets (never commit) ===
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# === Claude Code (personal settings stay local) ===
+.claude/settings.local.json
+.claude/worktrees/
+
+# === Logs and temp ===
+*.log
+tmp/
